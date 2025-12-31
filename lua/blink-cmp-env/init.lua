@@ -31,19 +31,21 @@ function M:get_completions(_, callback)
   local env_vars = vim.fn.environ()
   local items = {}
   for key, value in pairs(env_vars) do
+    local snippet_key = key
+    local completion_key = key
     if self.opts.insert_variable_prefix then
-      key = "$" .. key
+      completion_key = "$" .. completion_key
     end
 
     table.insert(items, {
-      label = key,
+      label = completion_key,
       insertTextFormat = vim.lsp.protocol.InsertTextFormat.PlainText,
       kind = require("blink.cmp.types").CompletionItemKind.Variable,
     })
 
     if self.opts.include_snippets then
       table.insert(items, {
-        label = key,
+        label = snippet_key,
         insertTextFormat = vim.lsp.protocol.InsertTextFormat.Snippet,
         insertText = value,
         kind = require("blink.cmp.types").CompletionItemKind.Snippet,
